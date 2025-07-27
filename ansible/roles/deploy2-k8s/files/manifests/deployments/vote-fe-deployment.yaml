@@ -1,0 +1,22 @@
+---
+# 1. vote-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-frontend
+  namespace: persistent-k8-vapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote-frontend
+  template:
+    metadata:
+      labels:
+        app: vote-frontend
+    spec:
+      containers:
+      - name: vote-frontend
+        image: "terraformacrunir.azurecr.io/votingapp_vote-hector:latest"
+        ports:
+        - containerPort: 80

@@ -1,0 +1,56 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for acr-ops
+
+# - name: Get terraform outputs
+#   set_fact:
+#     #terraform_outputs: "{{ lookup('pipe', 'terraform output -json') | from_json }}"
+#     terraform_outputs: "{{ lookup('file', '/Users/hmartineztobar/Documents/UNIR/Cloud/terraform/prod/outputs.json') | from_json }}"
+
+# - name: Set acr_info fact
+#   set_fact:
+#     acr_info: "{{ terraform_outputs.ACR_info.value }}"
+
+# - name: Set ACR URL
+#   set_fact:
+#     acr_url: "{{ acr_info.name if '.' in acr_info.name else acr_info.name + '.azurecr.io' }}"
+
+- name: ACR reachable yes or no
+  uri:
+    url: "https://{{ acr_url }}" 
+    method: GET
+    status_code:
+      - 200
+      - 401
+      - 404 
+    return_content: no
+  ignore_errors: true
+  
+- name: Show me URL
+  debug:
+    msg: "{{ acr_url }}"
+    
+- name: Log into ACR
+  containers.podman.podman_login:
+    registry: "{{ acr_url }}"
+    username: "{{ acr_info.username }}"
+    password: "{{ acr_info.admin_password }}"
+
+- name: Download nginx image with Podman
+  ansible.builtin.command: podman pull --arch amd64 docker.io/nginx:latest
+  # Atencion al profesor: 
+  # despues de mucho troubleshooting, he acabado usando
+  # este metodo porque siempre acababa descargando la imagen ARM (mi mac es 
+  # el nodo de control de ansible con podman y detecta su arquitectura).
+
+- name: Tag nginx image for ACR
+  containers.podman.podman_tag:
+    image: docker.io/nginx:latest
+    target_names:
+      - "{{ acr_url }}/nginx-hector:latest"
+
+- name: Push Hectors nginx to ACR
+  containers.podman.podman_image: 
+    name: "{{ acr_url }}/nginx-hector"
+    tag: latest
+    push: yes

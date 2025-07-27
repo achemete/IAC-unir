@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Connectivity Test – Azure VM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f7f9fc;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 3rem 4rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .lead {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 2rem;
+        }
+
+        .status {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 2rem;
+        }
+
+        .info {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        footer {
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 1.2rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .lead {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Connectivity Test Page</h1>
+        <p class="lead">The NGINX web server is running successfully inside a Podman container on the configured Azure VM.</p>
+        <div class="status">✔ Connection established</div>
+        <div class="info">
+            <p>This environment is part of a hands-on lab within the <strong>Advanced Cloud Computing</strong> programme taught by <em>UNIR</em>.</p>
+            <p>The virtual machine and containerized web server were fully provisioned using <strong>Ansible automation</strong> as part of the deployment workflow.</p>
+            <p>This page confirms successful configuration and external reachability of the containerized web service.</p>
+        </div>
+        <footer>
+            Created by <strong>Héctor Martinez Tobar</strong><br/>
+            with the assistance of <strong>Artificial Intelligence</strong>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MIT-0
+# tasks file for deploy2-k8s
+---
+- name: (K8s) - ACR URL
+  debug:
+    msg: "{{ acr_url }}"
+    
+- name: (K8s) - ACR Login
+  containers.podman.podman_login:
+    registry: "{{ acr_url }}"
+    username: "{{ acr_info.username }}"
+    password: "{{ acr_info.admin_password }}"
+
+  # Atencion al profesor: 
+  # despues de mucho troubleshooting, he acabado usando
+  # este metodo porque siempre acababa descargando la imagen ARM (mi mac es 
+  # el nodo de control de ansible con podman y detecta su arquitectura).
+
+- name: (K8s) - Download redis image with Podman (amd64)  
+  ansible.builtin.command: >
+    podman pull --arch amd64 {{ item }}
+  loop:
+    - docker.io/redis:latest
+    - docker.io/postgres:13
+    - docker.io/dockersamples/examplevotingapp_vote
+    - docker.io/dockersamples/examplevotingapp_worker
+    - docker.io/dockersamples/examplevotingapp_result
+  loop_control:
+    label: "{{ item }}"
+
+- name: (K8s) - Tag multiple images with Podman
+  containers.podman.podman_tag: 
+    image: "{{ item.source }}"
+    target_names:
+      - "{{ acr_url }}/{{ item.target }}"
+  loop:
+      - { source: "docker.io/redis:latest", target: "redis-hector:latest" }
+      - { source: "docker.io/postgres:13", target: "postgres-hector:latest"}
+      - { source: "docker.io/dockersamples/examplevotingapp_vote", target: "votingapp_vote-hector:latest"}
+      - { source: "docker.io/dockersamples/examplevotingapp_worker", target: "votingapp_worker-hector:latest"}
+      - { source: "docker.io/dockersamples/examplevotingapp_result", target: "votingapp_result-hector:latest"}
+  loop_control:
+    label: "{{ item.target }}"
+
+- name: (K8s) - Push Hectors redis image with Podman to ACR
+  containers.podman.podman_image: 
+    name: "{{ acr_url }}/{{ item }}"
+    tag: latest
+    push: true 
+  loop:
+    - "redis-hector" 
+    - "postgres-hector"
+    - "votingapp_vote-hector"
+    - "votingapp_worker-hector"
+    - "votingapp_result-hector"
+  loop_control:
+    label: "{{ item }}"

@@ -1,0 +1,83 @@
+# SPDX-License-Identifier: MIT-0
+# tasks file for deploy2-k8s
+---
+- name: ((K8s Ops)) - Create K8s namespace from mani
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/namespace.yaml"
+
+- name: Handling images for k8s app
+  import_tasks: images_k8s.yaml
+
+#########################
+##     Vote App        ##
+########################$
+## --- DEPLOYMENTS ---  #
+#-----------------------#
+
+- name: ((K8s Ops)) Working on the (frontend) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/vote-fe-deployment.yaml"
+
+- name: ((K8s Ops)) Working on the (result) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/result-deployment.yaml"
+
+- name: ((K8s Ops)) Working on the (worker) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/worker-deployment.yaml"
+
+- name: ((K8s Ops)) Working on the (redis) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/redis-deployment.yaml"
+
+- name: ((K8s Ops)) Working on the (postgres) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/postgres-deployment.yaml"
+
+- name: ((K8s Ops)) Working on the (postgres) deployment
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/deployments/redis-pvc.yaml"
+
+#######################
+## --- SERVICES ---  ##
+#---------------------#
+
+- name: ((K8s Ops)) Working on the (frontend) service
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/services/vote-fe-service.yaml"
+
+- name: ((K8s Ops)) Working on the (result) service
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/services/result-service.yaml"
+
+- name: ((K8s Ops)) Working on the (redis) service
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/services/redis-service.yaml"
+
+- name: ((K8s Ops)) Working on the (redis) service
+  ansible.builtin.k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/manifests/services/postgres-service.yaml"
+
+

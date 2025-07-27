@@ -1,0 +1,116 @@
+#SPDX-License-Identifier: MIT-0
+# tasks file for nginx-setup
+---  
+- name: Add Podman repo GPG key
+  become: yes
+  ansible.builtin.apt_key:
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
+    state: present
+
+- name: Add Podman repo to sources list
+  become: yes
+  ansible.builtin.apt_repository:
+    repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /"
+    filename: devel-kubic-libcontainers-stable
+
+- name: Update apt cache
+  become: yes
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Podman
+  become: yes
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: latest
+    update_cache: no
+
+- name: Remove Docker Hub nginx tag
+  containers.podman.podman_image:
+    name: "docker.io/nginx"
+    state: absent
+
+- name: Download nginx-hector image
+  containers.podman.podman_image:
+    name: "{{ acr_url }}/nginx-hector:latest"
+    pull: yes
+    username: "{{ acr_info.username }}"
+    password: "{{ acr_info.admin_password }}"
+
+- name: Ensure required directories exists on host
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: azureuser       
+    group: azureuser       
+    mode: '0755'
+  loop:
+    - { path: /home/azureuser/nginx-content }
+    - { path: /home/azureuser/nginx-conf }
+    - { path: /home/azureuser/.secrets/.nginx }
+
+- name: Sync nginx content folder to remote host
+  synchronize:
+    src: roles/vm-setup/files/my-nginx-content/   
+    dest: /home/azureuser/nginx-content/       
+    recursive: yes          
+
+- name: Copy nginx secrets folder to remote host
+  copy:
+    src: roles/vm-setup/files/htpasswd   
+    dest: /home/azureuser/.secrets/.nginx/.htpasswd 
+  
+- name: Copying nginxs default configuration
+  copy:
+    src: roles/vm-setup/files/my-nginx-conf/default.conf  
+    dest: /home/azureuser/nginx-conf/
+  #ignore_errors: true
+
+- name: Run nginx container with voluem
+  containers.podman.podman_container:
+    name: nginx-hector-container
+    image: "{{ acr_url }}/nginx-hector:latest"
+    state: started
+    restart_policy: always
+    ports:
+      - "8080:80"
+    volumes:
+      - /home/azureuser/nginx-content:/usr/share/nginx/html
+      - /home/azureuser/nginx-conf/default.conf:/etc/nginx/conf.d/default.conf
+      - /home/azureuser/.secrets/.nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+
+- name: Enable basic auth in nginx config
+  become: yes
+  blockinfile:
+    path: /home/azureuser/nginx-conf/default.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: Basic Auth"
+    insertafter: '^\s*location / {'
+    block: |
+      auth_basic "Restricted Content";
+      auth_basic_user_file /etc/nginx/.htpasswd;
+  #ignore_errors: true
+
+- name: Stop nginx container
+  containers.podman.podman_container:
+    name: nginx-hector-container
+    state: stopped
+
+- name: Start nginx container
+  containers.podman.podman_container:
+    name: nginx-hector-container
+    state: started
+
+# - name: Reload nginx inside container
+#   containers.podman.podman_exec:
+#     container: nginx-hector-container
+#     command: nginx -s reload
+
+- name: Reachable service check
+  uri:
+    url: "http://{{ ansible_master_info }}:8080" 
+    method: GET
+    status_code:
+      - 200
+      - 401
+    return_content: no
+  ignore_errors: true

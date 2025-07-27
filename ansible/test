@@ -1,0 +1,65 @@
+.
+├── aks-kubeconfig.yaml
+├── ansible.cfg
+├── azure_rm.yaml
+├── env_vars
+├── main_playbook.yaml
+├── roles
+│   ├── acr-ops
+│   │   ├── meta
+│   │   │   └── main.yml
+│   │   ├── README.md
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   ├── tests
+│   │   │   ├── inventory
+│   │   │   └── test.yml
+│   │   └── vars
+│   │       └── vars_acr.yml
+│   ├── deploy2-k8s
+│   │   ├── files
+│   │   │   ├── aks-kubeconf.yaml
+│   │   │   └── manifests
+│   │   │       ├── deployments
+│   │   │       │   ├── postgres-deployment.yaml
+│   │   │       │   ├── redis-deployment.yaml
+│   │   │       │   ├── redis-pvc.yaml
+│   │   │       │   ├── result-deployment.yaml
+│   │   │       │   ├── vote-fe-deployment.yaml
+│   │   │       │   └── worker-deployment.yaml
+│   │   │       ├── namespace.yaml
+│   │   │       └── services
+│   │   │           ├── postgres-service.yaml
+│   │   │           ├── redis-service.yaml
+│   │   │           ├── result-service.yaml
+│   │   │           └── vote-fe-service.yaml
+│   │   ├── meta
+│   │   │   └── main.yml
+│   │   ├── README.md
+│   │   ├── tasks
+│   │   │   ├── images_k8s.yaml
+│   │   │   └── main.yml
+│   │   └── tests
+│   │       ├── inventory
+│   │       └── test.yml
+│   └── vm-setup
+│       ├── files
+│       │   ├── htpasswd
+│       │   ├── my-nginx-conf
+│       │   │   └── default.conf
+│       │   └── my-nginx-content
+│       │       ├── index.html
+│       │       └── styles.css
+│       ├── meta
+│       │   └── main.yml
+│       ├── README.md
+│       ├── tasks
+│       │   └── main.yml
+│       ├── tests
+│       │   ├── inventory
+│       │   └── test.yml
+│       └── vars
+│           └── main.yml
+└── test
+
+23 directories, 40 files

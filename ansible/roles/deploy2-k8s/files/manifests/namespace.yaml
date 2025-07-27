@@ -1,0 +1,5 @@
+# roles/deploy2-k8s/files/manifests/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: persistent-k8-vapp

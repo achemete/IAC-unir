@@ -1,0 +1,31 @@
+# 5. postgres-deployment.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-vote
+  namespace: persistent-k8-vapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-vote
+  template:
+    metadata:
+      labels:
+        app: db-vote
+    spec:
+      containers:
+      - name: postgres
+        image: "terraformacrunir.azurecr.io/postgres-hector:latest"
+        env:
+        - name: POSTGRES_HOST
+          value: db-vote.persistent-k8-vapp.svc.cluster.local
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "votes"
+        ports:
+        - containerPort: 5432

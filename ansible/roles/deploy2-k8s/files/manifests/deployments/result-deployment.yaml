@@ -1,0 +1,22 @@
+# 2. result-deployment.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-frontend
+  namespace: persistent-k8-vapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: result-frontend
+  template:
+    metadata:
+      labels:
+        app: result-frontend
+    spec:
+      containers:
+      - name: result-frontend
+        image: "terraformacrunir.azurecr.io/votingapp_result-hector:latest"
+        ports:
+        - containerPort: 80

@@ -1,0 +1,25 @@
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 2rem 3rem;
+    border: 2px solid white;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+footer {
+    margin-top: 2rem;
+    font-style: italic;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}

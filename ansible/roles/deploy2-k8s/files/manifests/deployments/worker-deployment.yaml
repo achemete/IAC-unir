@@ -1,0 +1,25 @@
+# 3. worker-deployment.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-vote
+  namespace: persistent-k8-vapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-vote
+  template:
+    metadata:
+      labels:
+        app: worker-vote
+    spec:
+      containers:
+      - name: worker-vote
+        image: "terraformacrunir.azurecr.io/votingapp_worker-hector:latest"
+        env:
+        - name: REDIS
+          value: "redis:6379"
+        - name: DB
+          value: "db:5432"

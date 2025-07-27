@@ -1,0 +1,11 @@
+all:
+    children:
+        ansible_masters:
+            hosts:
+                localhost:
+                    ansible_connection: local
+        webservers:
+            hosts:
+                ansible-node1:
+                        ansible_host: 40.68.162.116
+                        ansible_user: azureuser

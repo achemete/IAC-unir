@@ -1,0 +1,42 @@
+---
+- name: Gather and set information
+  hosts: all
+  gather_facts: false
+  vars:
+    terraform_outputs: "{{ lookup('file', '/Users/hmartineztobar/Documents/UNIR/Cloud/terraform/prod/outputs.json') | from_json }}"
+    k8s_config: "{{ lookup('file', '/Users/hmartineztobar/Documents/UNIR/Cloud/ansible/roles/deploy2-k8s/files/aks-kubeconf.yaml') | from_yaml }}"
+    kubeconfig_out: "/Users/hmartineztobar/Documents/UNIR/Cloud/ansible/roles/deploy2-k8s/files/aks-kubeconf.yaml"
+  pre_tasks:
+    - name: Set acr_info fact
+      set_fact:
+        acr_info: "{{ terraform_outputs.ACR_info.value }}"
+    - name: Set ansible machine fact
+      set_fact:
+        ansible_master_info: "{{ terraform_outputs.vm_ansible_ips.value }}"
+
+    - name: Set ACR URL
+      set_fact:
+        acr_url: "{{ acr_info.name if '.' in acr_info.name else acr_info.name + '.azurecr.io' }}"
+    
+    - name: Set K8s config for individual values
+      set_fact:
+        k8s_config_values: "{{ k8s_config }}"
+
+    - name: Set the k8s configuration path
+      set_fact:
+        kubeconfig: "{{ kubeconfig_out }}"
+
+- name: Image handling
+  hosts: localhost
+  roles:
+    - role: acr-ops
+
+- name: vm setup
+  hosts: webservers
+  roles:
+    - role: vm-setup
+
+- name: K8s setup
+  hosts: localhost
+  roles:
+    - role: deploy2-k8s

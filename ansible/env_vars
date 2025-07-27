@@ -1,0 +1,2 @@
+export AZURE_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+export AZURE_TENANT="$(az account show --query tenantId -o tsv)"

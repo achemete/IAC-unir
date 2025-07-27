@@ -1,0 +1,11 @@
+all:
+    children:
+        ansible_masters:
+            hosts:
+                localhost:
+                    ansible_connection: local
+        webservers:
+            hosts:
+                ${vm_ansible_name}:
+                        ansible_host: ${vm_ansible_ips}
+                        ansible_user: azureuser

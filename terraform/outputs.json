@@ -1,0 +1,77 @@
+{
+  "ACR_info": {
+    "sensitive": true,
+    "type": [
+      "object",
+      {
+        "admin_password": "string",
+        "location": "string",
+        "name": "string",
+        "sku": "string",
+        "username": "string"
+      }
+    ],
+    "value": {
+      "admin_password": "++kY3Gle5QuEYYvM+EbBltwSwxSVtMNERvF28WTIyk+ACRCUaQO8",
+      "location": "westeurope",
+      "name": "terraformacrunir",
+      "sku": "Basic",
+      "username": "terraformacrunir"
+    }
+  },
+  "ACR_nameonly": {
+    "sensitive": false,
+    "type": "string",
+    "value": "terraformacrunir"
+  },
+  "kubernetes_cluster_info": {
+    "sensitive": false,
+    "type": "string",
+    "value": "    K8s cluster name: terraform-aks-unir-prod,\n    K8s cluster FQDN: terraformaksunir-prod-to77r4hb.hcp.westeurope.azmk8s.io\n\n"
+  },
+  "network_info": {
+    "sensitive": false,
+    "type": "string",
+    "value": "    Virtual Network Name: k8s-prod-net,\n    Virtual Network Address Space: 10.0.0.0/16,\n    Subnet Name: k8s-prod-subnet1,\n    Subnet Address Prefix: 10.0.1.0/24\n"
+  },
+  "nsg_association": {
+    "sensitive": false,
+    "type": "string",
+    "value": "Network Security Group nsg-prod is associated with the subnet: k8s-prod-subnet1 and NIC: k8s-prod-nic1"
+  },
+  "private_key_pem": {
+    "sensitive": true,
+    "type": "string",
+    "value": "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n"
+  },
+  "public_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "40.68.162.116"
+  },
+  "security_group": {
+    "sensitive": false,
+    "type": "string",
+    "value": "    Security Group ID: /subscriptions/49853ca7-b84e-46a3-92cc-9637a00610dd/resourceGroups/rg-terraform-prod/providers/Microsoft.Network/networkSecurityGroups/nsg-prod\n    Security Group Name: nsg-prod\n"
+  },
+  "security_rules": {
+    "sensitive": false,
+    "type": "string",
+    "value": "Security rules created: AllowSSH | AllowHTTPS | AllowHTTP | AllowHTTP8080"
+  },
+  "vm_ansible_ips": {
+    "sensitive": false,
+    "type": "string",
+    "value": "40.68.162.116"
+  },
+  "vm_ansible_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ansible-node1"
+  },
+  "vm_info": {
+    "sensitive": false,
+    "type": "string",
+    "value": "    VM Name: ansible-node1,\n    VM Size: Standard_B1s,\n    VM Location: westeurope,\n    VM Resource Group: rg-terraform-prod\n"
+  }
+}
